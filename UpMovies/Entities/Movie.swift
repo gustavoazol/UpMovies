@@ -9,9 +9,12 @@
 struct Movie: Decodable {
     let id: Int
     let title: String
+    let originalTitle: String
     let releaseDate: String
     let posterPath: String?
     let backdropPath: String?
+    let genreIds: [Int]
+    let overview: String
     
     var dateFormat: String {
         return "YYYY-MM-dd"
@@ -20,8 +23,11 @@ struct Movie: Decodable {
     enum CodingKeys: String, CodingKey {
         case id
         case title
+        case originalTitle = "original_title"
         case releaseDate = "release_date"
         case posterPath = "poster_path"
         case backdropPath = "backdrop_path"
+        case genreIds = "genre_ids"
+        case overview
     }
 }

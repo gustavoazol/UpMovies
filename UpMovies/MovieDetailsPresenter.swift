@@ -6,7 +6,7 @@
 //  Copyright © 2018 Gustavo Azevedo de Oliveira. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class MovieDetailsPresenter: NSObject {
     var movie: Movie?
@@ -40,7 +40,40 @@ class MovieDetailsPresenter: NSObject {
         }
     }
     
-    private func formattedDate(fromMovie movie: Movie) -> String {
+    var attributedTitle: NSAttributedString {
+        guard let movie = self.movie else {
+            return NSAttributedString(string: "")
+        }
+        
+        let attrTitle = NSMutableAttributedString(string: movie.title, attributes: [NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 20.0)])
+        
+        if movie.title != movie.originalTitle {
+            let attrOriginalTitle = NSAttributedString(string: " (\(movie.originalTitle))", attributes: [NSAttributedStringKey.font : UIFont.italicSystemFont(ofSize: 16.0)])
+            attrTitle.append(attrOriginalTitle)
+        }
+        
+        return attrTitle
+    }
+    
+    var genres: String {
+        guard let movie = self.movie else {
+            return ""
+        }
+        
+        var genres = ""
+        for genreId in movie.genreIds {
+            if let genreName = Configuration.current?.genres[genreId] {
+                genres.append("\(genreName)   ")
+            }
+        }
+        
+        return genres.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+    }
+    
+    var formattedDate: String? {
+        guard let movie = self.movie  else {
+            return nil
+        }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = movie.dateFormat
         

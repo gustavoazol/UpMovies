@@ -14,6 +14,7 @@ struct Configuration: Decodable {
     let backdropSizes: [String]
     let logoSizes: [String]
     
+    var genres = Dictionary<Int, String>()
     
     enum CodingKeys: String, CodingKey {
         case baseUrl = "secure_base_url"

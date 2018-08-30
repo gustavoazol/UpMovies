@@ -14,7 +14,7 @@ class MoviesDbRestAPI: NSObject {
     private static let HOST_AND_VERSION: String = "https://api.themoviedb.org"
     
     class func getConfiguration(completion: @escaping (_ config: Configuration?)->Void) {
-        let path = "/3/configuration"
+        let path = "/configuration"
         let method = "GET"
         
         self.executeRequest(path: path, httpMethod: method) { (data, response, error) in
@@ -47,7 +47,7 @@ class MoviesDbRestAPI: NSObject {
     }
     
     class func getUpcomingMovies(completion: @escaping (_ results: [Movie])->Void) {
-        let path = "/3/movie/upcoming"
+        let path = "/movie/upcoming"
         let method = "GET"
         
         self.executeRequest(path: path, httpMethod: method) { (data, response, error) in
@@ -79,12 +79,52 @@ class MoviesDbRestAPI: NSObject {
         }
     }
     
+    class func getGenresWithIds(completion: @escaping (_ genresDic: Dictionary<Int, String>)->Void) {
+        let path = "/genre/movie/list"
+        let method = "GET"
+        
+        self.executeRequest(path: path, httpMethod: method) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion([:])
+            }
+            else if let returnedData = data {
+                do {
+                    guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
+                        completion([:])
+                        return
+                    }
+                    
+                    guard let genresJson = jsonDic["genres"] as? [Dictionary<String, Any>] else {
+                        completion([:])
+                        return
+                    }
+                    
+                    var genresDic = Dictionary<Int, String>()
+                    for genre in genresJson {
+                        if let genreId = genre["id"] as? Int {
+                            genresDic[genreId] = (genre["name"] as? String)
+                        }
+                    }
+                    
+                    completion(genresDic)
+                }
+                catch {
+                    print(error.localizedDescription)
+                    completion([:])
+                }
+            }
+        }
+    }
+    
+    
+    // MARK: - Default Request
     private class func executeRequest(path: String, queryItems: [URLQueryItem]? = nil, httpMethod: String, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
         
         guard var urlComponents = URLComponents(string: HOST_AND_VERSION) else {
             fatalError("Could not create URL from components")
         }
-        urlComponents.path = path
+        urlComponents.path = "/3\(path)"
         
         var query = [
             URLQueryItem(name: "api_key", value: TMDB_API_KEY),

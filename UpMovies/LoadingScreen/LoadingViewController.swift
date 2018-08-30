@@ -29,7 +29,12 @@ class LoadingViewController: UIViewController {
                 }
                 
                 Configuration.current = configuration
-                self?.performSegue(withIdentifier: "MoviesListSegue", sender: nil)
+                MoviesDbRestAPI.getGenresWithIds(completion: { (genresDic) in
+                    DispatchQueue.main.async {
+                        Configuration.current?.genres = genresDic
+                        self?.performSegue(withIdentifier: "MoviesListSegue", sender: nil)
+                    }
+                })
             }
         }
     }
