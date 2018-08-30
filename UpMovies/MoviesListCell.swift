@@ -23,6 +23,9 @@ class MoviesListCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        let selectedBgView = UIView()
+        selectedBgView.backgroundColor = UIColor.black
+        self.selectedBackgroundView = selectedBgView
         
         self.bgBottomConstraint.constant -= 2 * imageParallaxFactor
         self.imgBackTopInitial = self.bgTopConstraint.constant
