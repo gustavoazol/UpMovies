@@ -24,6 +24,12 @@ class MoviesListViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? MovieDetailsViewController,
+            let selectedIndex = self.tableView.indexPathForSelectedRow {
+            vc.presenter.movie = self.presenter.getMovie(forCell: selectedIndex)
+        }
+    }
 }
 
 // MARK: - TableView Datasource

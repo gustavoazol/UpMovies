@@ -8,6 +8,8 @@
 
 
 struct Configuration: Decodable {
+    static var current: Configuration?
+    
     let baseUrl: String
     let backdropSizes: [String]
     let logoSizes: [String]

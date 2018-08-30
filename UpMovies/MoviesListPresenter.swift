@@ -13,26 +13,13 @@ protocol MoviesListPresenterDelegate: class {
 }
 
 class MoviesListPresenter: NSObject {
-    private var config: Configuration?
     private var moviesList = [Movie]()
 
     weak var delegate: MoviesListPresenterDelegate?
     
     override init() {
         super.init()
-        self.loadConfiguration()
-    }
-    
-    private func loadConfiguration() {
-        MoviesDbRestAPI.getConfiguration { [weak self] (config) in
-            DispatchQueue.main.async {
-                guard let configuration = config else {
-                    return
-                }
-                self?.config = configuration
-                self?.fetchMovies()
-            }
-        }
+        self.fetchMovies()
     }
     
     private func fetchMovies() {
@@ -42,6 +29,13 @@ class MoviesListPresenter: NSObject {
                 self?.delegate?.moviesListUpdated()
             }
         }
+    }
+    
+    func getMovie(forCell indexPath: IndexPath) -> Movie? {
+        guard indexPath.row < self.moviesList.count else {
+            return nil
+        }
+        return self.moviesList[indexPath.row]
     }
 }
 
@@ -64,7 +58,7 @@ extension MoviesListPresenter {
     }
     
     private func bgUrl(forMovie movie: Movie) -> URL? {
-        guard let configuration = self.config else {
+        guard let configuration = Configuration.current else {
             return nil
         }
         
@@ -78,7 +72,7 @@ extension MoviesListPresenter {
     }
     
     private func thumbUrl(forMovie movie: Movie) -> URL? {
-        guard let configuration = self.config else {
+        guard let configuration = Configuration.current else {
             return nil
         }
         
