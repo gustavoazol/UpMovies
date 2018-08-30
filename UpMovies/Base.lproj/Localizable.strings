@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  UpMovies
+
+  Created by Gustavo Azevedo de Oliveira on 30/08/2018.
+  Copyright © 2018 Gustavo Azevedo de Oliveira. All rights reserved.
+*/
+
+"movie_details_overview" = "Overview:";
+"movie_details_overview_not_available" = "Overview not available";

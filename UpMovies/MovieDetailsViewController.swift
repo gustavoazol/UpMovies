@@ -35,7 +35,7 @@ class MovieDetailsViewController: UIViewController {
         self.lblTitle.attributedText = self.presenter.attributedTitle
         self.lblGenres.text = self.presenter.genres
         self.lblRelease.text = self.presenter.formattedDate
-        self.lblOverview.text = self.presenter.movie?.overview
+        self.lblOverview.text = self.presenter.movieOverview
     }
     
     

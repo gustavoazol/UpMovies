@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		ECF5444A21376F03000BCCE0 /* MovieDetailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5444921376F03000BCCE0 /* MovieDetailsPresenter.swift */; };
 		ECF5444D213770CB000BCCE0 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5444C213770CB000BCCE0 /* LoadingViewController.swift */; };
+		ECF5445721379BFE000BCCE0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ECF5445921379BFE000BCCE0 /* Localizable.strings */; };
 		ECFCAC0821376E6200CEAAFC /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFCAC0721376E6200CEAAFC /* MovieDetailsViewController.swift */; };
 		ECFD9B5E2134F01F004F0901 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */; };
 		ECFD9B632134F01F004F0901 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECFD9B612134F01F004F0901 /* Main.storyboard */; };
@@ -28,6 +29,8 @@
 		A302465ACDCAEB1334F1B303 /* Pods_UpMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UpMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECF5444921376F03000BCCE0 /* MovieDetailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsPresenter.swift; sourceTree = "<group>"; };
 		ECF5444C213770CB000BCCE0 /* LoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
+		ECF5445A21379C03000BCCE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		ECF5445B21379C43000BCCE0 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ECFCAC0721376E6200CEAAFC /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
 		ECFD9B5A2134F01F004F0901 /* UpMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -131,6 +134,7 @@
 				ECFD9B642134F021004F0901 /* Assets.xcassets */,
 				ECFD9B662134F021004F0901 /* LaunchScreen.storyboard */,
 				ECFD9B692134F021004F0901 /* Info.plist */,
+				ECF5445921379BFE000BCCE0 /* Localizable.strings */,
 			);
 			path = UpMovies;
 			sourceTree = "<group>";
@@ -188,6 +192,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"pt-BR",
 			);
 			mainGroup = ECFD9B512134F01F004F0901;
 			productRefGroup = ECFD9B5B2134F01F004F0901 /* Products */;
@@ -205,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECFD9B682134F021004F0901 /* LaunchScreen.storyboard in Resources */,
+				ECF5445721379BFE000BCCE0 /* Localizable.strings in Resources */,
 				ECFD9B652134F021004F0901 /* Assets.xcassets in Resources */,
 				ECFD9B632134F01F004F0901 /* Main.storyboard in Resources */,
 			);
@@ -272,6 +278,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		ECF5445921379BFE000BCCE0 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ECF5445A21379C03000BCCE0 /* Base */,
+				ECF5445B21379C43000BCCE0 /* pt-BR */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		ECFD9B612134F01F004F0901 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -295,6 +310,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -355,6 +371,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
