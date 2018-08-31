@@ -11,6 +11,7 @@ import Kingfisher
 
 class MoviesListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var vTableLoading: UIView!
     
     let presenter = MoviesListPresenter()
     
@@ -53,6 +54,14 @@ extension MoviesListViewController: UITableViewDataSource {
     }
 }
 
+extension MoviesListViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        if let maxIndex = indexPaths.max() {
+            self.presenter.prefetchMovie(maxIndex: maxIndex)
+        }
+    }
+}
+
 extension MoviesListViewController: UITableViewDelegate {
     // Remouve grouped tableview insets (top and bottom)
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -67,6 +76,7 @@ extension MoviesListViewController: UITableViewDelegate {
         if let movieCell = cell as? MoviesListCell {
             self.setCellImageOffset(cell: movieCell, indexPath: indexPath)
         }
+        self.presenter.prefetchMovie(maxIndex: indexPath)
     }
 
     //MARK: Scrollview Paralax Effect
@@ -93,6 +103,16 @@ extension MoviesListViewController: UITableViewDelegate {
 
 // MARK: - Presenter Delegate
 extension MoviesListViewController: MoviesListPresenterDelegate {
+    func newMoviesLoaded(atIndexes indexes: [IndexPath]) {
+        self.tableView.beginUpdates()
+        self.tableView.insertRows(at: indexes, with: UITableViewRowAnimation.none)
+        self.tableView.endUpdates()
+    }
+    
+    func showLoadingMoreMovies(loading: Bool) {
+        self.tableView.tableFooterView = loading ? vTableLoading : nil
+    }
+    
     func moviesListUpdated() {
         self.tableView.reloadData()
     }

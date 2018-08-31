@@ -21,7 +21,7 @@ class MovieDetailsPresenter: NSObject {
             return URL(string: bgUrlPath)
         }
         else {
-            return nil
+            return self.thumbUrl
         }
     }
     

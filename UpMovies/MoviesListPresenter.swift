@@ -10,10 +10,16 @@ import Foundation
 
 protocol MoviesListPresenterDelegate: class {
     func moviesListUpdated()
+    func showLoadingMoreMovies(loading: Bool)
+    func newMoviesLoaded(atIndexes indexes: [IndexPath])
 }
 
 class MoviesListPresenter: NSObject {
     private var moviesList = [Movie]()
+    private var page: Int = 0
+    private var maxPages: Int = 0
+    
+    private var isLoadingMovies = false
 
     weak var delegate: MoviesListPresenterDelegate?
     
@@ -23,10 +29,51 @@ class MoviesListPresenter: NSObject {
     }
     
     private func fetchMovies() {
-        MoviesDbRestAPI.getUpcomingMovies { [weak self] (movies) in
+        self.isLoadingMovies = true
+        MoviesDbRestAPI.getUpcomingMovies { [weak self] (page, maxPages, movies) in
             DispatchQueue.main.async {
+                self?.isLoadingMovies = false
+                self?.page = page
+                self?.maxPages = maxPages
                 self?.moviesList = movies
                 self?.delegate?.moviesListUpdated()
+            }
+        }
+    }
+    
+    func prefetchMovie(maxIndex: IndexPath) {
+        guard self.page < self.maxPages, !isLoadingMovies else {
+            return
+        }
+        
+        guard maxIndex.row == self.moviesCount - 1 else {
+            return
+        }
+        
+        self.isLoadingMovies = true
+        self.delegate?.showLoadingMoreMovies(loading: true)
+        
+        let nextPage = self.page + 1
+        MoviesDbRestAPI.getUpcomingMovies(page: nextPage) { [weak self] (page, maxPages, newMovies) in
+            DispatchQueue.main.async {
+                self?.isLoadingMovies = false
+                self?.delegate?.showLoadingMoreMovies(loading: false)
+                    
+                self?.page = page
+                self?.maxPages = maxPages
+                
+                /*
+                var newIndexes = [IndexPath]()
+                for i in 0..<newMovies.count {
+                    let row = (self?.moviesList.count ?? 0) + i
+                    let indexPath = IndexPath(row: row, section: 0)
+                    newIndexes.append(indexPath)
+                }
+                 */
+                
+                self?.moviesList.append(contentsOf: newMovies)
+                self?.delegate?.moviesListUpdated()
+//                self?.delegate?.newMoviesLoaded(atIndexes: newIndexes)
             }
         }
     }
@@ -51,8 +98,8 @@ extension MoviesListPresenter {
         }
         
         let movie = self.moviesList[indexPath.row]
-        let bgUrl: URL? = self.bgUrl(forMovie: movie)
         let thumbUrl: URL? = self.thumbUrl(forMovie: movie)
+        let bgUrl: URL? = self.bgUrl(forMovie: movie) ?? thumbUrl
         let description = self.formattedDate(fromMovie: movie)
         return (bgUrl, thumbUrl, movie.title, description)
     }

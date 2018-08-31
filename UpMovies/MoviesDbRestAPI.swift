@@ -46,34 +46,39 @@ class MoviesDbRestAPI: NSObject {
         }
     }
     
-    class func getUpcomingMovies(completion: @escaping (_ results: [Movie])->Void) {
+    class func getUpcomingMovies(page: Int? = nil, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
         let path = "/movie/upcoming"
         let method = "GET"
         
-        self.executeRequest(path: path, httpMethod: method) { (data, response, error) in
+        var queryItems: [URLQueryItem]? = nil
+        if let wantedPage = page {
+            queryItems = [URLQueryItem(name: "page", value: "\(wantedPage)")]
+        }
+        
+        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
-                completion([])
+                completion(0, 0, [])
             }
             else if let returnedData = data {
                 do {
                     guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
-                        completion([])
+                        completion(0, 0, [])
                         return
                     }
                     
-                    guard let moviesJson = jsonDic["results"] else {
-                        completion([])
+                    guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
+                        completion(0, 0, [])
                         return
                     }
                     
                     let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)
                     let movies = try JSONDecoder().decode([Movie].self, from: moviesData)
-                    completion(movies)
+                    completion(newPage, maxPages, movies)
                 }
                 catch {
                     print(error.localizedDescription)
-                    completion([])
+                    completion(0, 0, [])
                 }
             }
         }
