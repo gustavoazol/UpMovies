@@ -46,83 +46,6 @@ class MoviesDbRestAPI: NSObject {
         }
     }
     
-    class func getUpcomingMovies(page: Int? = nil, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
-        let path = "/movie/upcoming"
-        let method = "GET"
-        
-        var queryItems: [URLQueryItem]? = nil
-        if let wantedPage = page {
-            queryItems = [URLQueryItem(name: "page", value: "\(wantedPage)")]
-        }
-        
-        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-                completion(0, 0, [])
-            }
-            else if let returnedData = data {
-                do {
-                    guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
-                        completion(0, 0, [])
-                        return
-                    }
-                    
-                    guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
-                        completion(0, 0, [])
-                        return
-                    }
-                    
-                    let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)
-                    let movies = try JSONDecoder().decode([Movie].self, from: moviesData)
-                    completion(newPage, maxPages, movies)
-                }
-                catch {
-                    print(error.localizedDescription)
-                    completion(0, 0, [])
-                }
-            }
-        }
-    }
-    
-    class func searchMovies(page: Int? = nil, query: String, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
-        let path = "/search/movie"
-        let method = "GET"
-        
-        let pageString = (page != nil) ? "\(page!)" : nil
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "page", value: pageString),
-            URLQueryItem(name: "query", value: query)
-        ]
-        
-        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-                completion(0, 0, [])
-            }
-            else if let returnedData = data {
-                do {
-                    guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
-                        completion(0, 0, [])
-                        return
-                    }
-                    
-                    guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
-                        completion(0, 0, [])
-                        return
-                    }
-                    
-                    let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)
-                    let movies = try JSONDecoder().decode([Movie].self, from: moviesData)
-                    completion(newPage, maxPages, movies)
-                }
-                catch {
-                    print(error.localizedDescription)
-                    completion(0, 0, [])
-                }
-            }
-        }
-    }
-    
     class func getGenresWithIds(completion: @escaping (_ genresDic: Dictionary<Int, String>)->Void) {
         let path = "/genre/movie/list"
         let method = "GET"
@@ -191,5 +114,83 @@ class MoviesDbRestAPI: NSObject {
         let session = URLSession(configuration: URLSessionConfiguration.default)
         let task = session.dataTask(with: request, completionHandler: completion)
         task.resume()
+    }
+}
+
+// MARK: - Movies Fetch
+extension MoviesDbRestAPI {
+    class func getUpcomingMovies(page: Int? = nil, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
+        let path = "/movie/upcoming"
+        let method = "GET"
+        
+        var queryItems: [URLQueryItem]? = nil
+        if let wantedPage = page {
+            queryItems = [URLQueryItem(name: "page", value: "\(wantedPage)")]
+        }
+        
+        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion(0, 0, [])
+            }
+            else if let returnedData = data {
+                do {
+                    let decoded = try self.decodeMoviesResult(resultData: returnedData)
+                    completion(decoded.page, decoded.maxPage, decoded.movies)
+                }
+                catch {
+                    print(error.localizedDescription)
+                    completion(0, 0, [])
+                }
+            }
+            else {
+                completion(0, 0, [])
+            }
+        }
+    }
+    
+    class func searchMovies(page: Int? = nil, query: String, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
+        let path = "/search/movie"
+        let method = "GET"
+        
+        let pageString = (page != nil) ? "\(page!)" : nil
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "page", value: pageString),
+            URLQueryItem(name: "query", value: query)
+        ]
+        
+        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion(0, 0, [])
+            }
+            else if let returnedData = data {
+                do {
+                    let decoded = try self.decodeMoviesResult(resultData: returnedData)
+                    completion(decoded.page, decoded.maxPage, decoded.movies)
+                }
+                catch {
+                    print(error.localizedDescription)
+                    completion(0, 0, [])
+                }
+            }
+            else {
+                completion(0, 0, [])
+            }
+        }
+    }
+    
+    private class func decodeMoviesResult(resultData: Data) throws -> (page: Int, maxPage: Int, movies: [Movie]) {
+        guard let jsonDic = try JSONSerialization.jsonObject(with: resultData, options: .mutableContainers) as? Dictionary<String, Any> else {
+            return (0, 0, [])
+        }
+        
+        guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
+            return (0, 0, [])
+        }
+        
+        let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)
+        let movies = try JSONDecoder().decode([Movie].self, from: moviesData)
+        return (newPage, maxPages, movies)
     }
 }
