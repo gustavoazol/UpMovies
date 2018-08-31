@@ -18,6 +18,7 @@ class MoviesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.presenter.delegate = self
+        self.addKeyboardObservers()
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,6 +33,35 @@ class MoviesListViewController: UIViewController {
         }
     }
 }
+
+// MARK: - Keyboard Insets
+extension MoviesListViewController {
+    private func addKeyboardObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        self.tableView.contentInset.bottom = keyboardSize.height
+    }
+    
+    @objc private func keyboardWillHide(notification: Notification) {
+        self.tableView.contentInset.bottom = 0.0
+    }
+}
+
+
+// MARK: - Search Bar
+extension MoviesListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.presenter.searchForMovies(withText: searchText)
+    }
+}
+
 
 // MARK: - TableView Datasource
 extension MoviesListViewController: UITableViewDataSource {
@@ -62,6 +92,7 @@ extension MoviesListViewController: UITableViewDataSourcePrefetching {
     }
 }
 
+// MARK: - TableView Delegate
 extension MoviesListViewController: UITableViewDelegate {
     // Remouve grouped tableview insets (top and bottom)
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

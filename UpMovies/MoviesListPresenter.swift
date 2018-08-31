@@ -16,11 +16,11 @@ protocol MoviesListPresenterDelegate: class {
 
 class MoviesListPresenter: NSObject {
     private var moviesList = [Movie]()
-    private var page: Int = 0
-    private var maxPages: Int = 0
     
     private var isLoadingMovies = false
+    private var searchWorkItem: DispatchWorkItem?
 
+    let interactor = MoviesListInteractor()
     weak var delegate: MoviesListPresenterDelegate?
     
     override init() {
@@ -30,19 +30,15 @@ class MoviesListPresenter: NSObject {
     
     private func fetchMovies() {
         self.isLoadingMovies = true
-        MoviesDbRestAPI.getUpcomingMovies { [weak self] (page, maxPages, movies) in
-            DispatchQueue.main.async {
-                self?.isLoadingMovies = false
-                self?.page = page
-                self?.maxPages = maxPages
-                self?.moviesList = movies
-                self?.delegate?.moviesListUpdated()
-            }
+        self.interactor.fetchMovies { [weak self] (movies) in
+            self?.isLoadingMovies = false
+            self?.moviesList = movies
+            self?.delegate?.moviesListUpdated()
         }
     }
     
     func prefetchMovie(maxIndex: IndexPath) {
-        guard self.page < self.maxPages, !isLoadingMovies else {
+        guard self.interactor.hasMoreMoviesToFetch, !isLoadingMovies else {
             return
         }
         
@@ -53,28 +49,23 @@ class MoviesListPresenter: NSObject {
         self.isLoadingMovies = true
         self.delegate?.showLoadingMoreMovies(loading: true)
         
-        let nextPage = self.page + 1
-        MoviesDbRestAPI.getUpcomingMovies(page: nextPage) { [weak self] (page, maxPages, newMovies) in
-            DispatchQueue.main.async {
-                self?.isLoadingMovies = false
-                self?.delegate?.showLoadingMoreMovies(loading: false)
-                    
-                self?.page = page
-                self?.maxPages = maxPages
-                
-                /*
-                var newIndexes = [IndexPath]()
-                for i in 0..<newMovies.count {
-                    let row = (self?.moviesList.count ?? 0) + i
-                    let indexPath = IndexPath(row: row, section: 0)
-                    newIndexes.append(indexPath)
-                }
-                 */
-                
-                self?.moviesList.append(contentsOf: newMovies)
-                self?.delegate?.moviesListUpdated()
-//                self?.delegate?.newMoviesLoaded(atIndexes: newIndexes)
-            }
+        self.interactor.loadMoreMovies { [weak self] (movies) in
+            self?.isLoadingMovies = false
+            self?.delegate?.showLoadingMoreMovies(loading: false)
+            
+            self?.moviesList.append(contentsOf: movies)
+            self?.delegate?.moviesListUpdated()
+            
+            /*
+             var newIndexes = [IndexPath]()
+             for i in 0..<newMovies.count {
+             let row = (self?.moviesList.count ?? 0) + i
+             let indexPath = IndexPath(row: row, section: 0)
+             newIndexes.append(indexPath)
+             }
+             
+             self?.delegate?.newMoviesLoaded(atIndexes: newIndexes)
+             */
         }
     }
     
@@ -83,6 +74,30 @@ class MoviesListPresenter: NSObject {
             return nil
         }
         return self.moviesList[indexPath.row]
+    }
+}
+
+
+// MARK: - Search Movies
+extension MoviesListPresenter {
+    func searchForMovies(withText text: String) {
+        self.searchWorkItem?.cancel()
+
+        let dispatchWorkItem = DispatchWorkItem(block: { [weak self] in
+            self?.reloadMoviesList(forTerm: text)
+        })
+        
+        self.searchWorkItem = dispatchWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: dispatchWorkItem)
+    }
+    
+    private func reloadMoviesList(forTerm searchTerm: String) {
+        guard self.interactor.searchTerm != searchTerm else {
+            return
+        }
+        
+        self.interactor.searchTerm = searchTerm
+        self.fetchMovies()
     }
 }
 

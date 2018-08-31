@@ -84,6 +84,45 @@ class MoviesDbRestAPI: NSObject {
         }
     }
     
+    class func searchMovies(page: Int? = nil, query: String, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
+        let path = "/search/movie"
+        let method = "GET"
+        
+        let pageString = (page != nil) ? "\(page!)" : nil
+        let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "page", value: pageString),
+            URLQueryItem(name: "query", value: query)
+        ]
+        
+        self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+                completion(0, 0, [])
+            }
+            else if let returnedData = data {
+                do {
+                    guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
+                        completion(0, 0, [])
+                        return
+                    }
+                    
+                    guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
+                        completion(0, 0, [])
+                        return
+                    }
+                    
+                    let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)
+                    let movies = try JSONDecoder().decode([Movie].self, from: moviesData)
+                    completion(newPage, maxPages, movies)
+                }
+                catch {
+                    print(error.localizedDescription)
+                    completion(0, 0, [])
+                }
+            }
+        }
+    }
+    
     class func getGenresWithIds(completion: @escaping (_ genresDic: Dictionary<Int, String>)->Void) {
         let path = "/genre/movie/list"
         let method = "GET"
