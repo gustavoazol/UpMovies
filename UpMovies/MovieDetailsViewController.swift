@@ -14,6 +14,7 @@ class MovieDetailsViewController: UIViewController {
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblGenres: UILabel!
     @IBOutlet weak var lblRelease: UILabel!
+    @IBOutlet weak var lblOverviewWord: UILabel!
     @IBOutlet weak var lblOverview: UILabel!
     
     let presenter = MovieDetailsPresenter()
@@ -35,6 +36,8 @@ class MovieDetailsViewController: UIViewController {
         self.lblTitle.attributedText = self.presenter.attributedTitle
         self.lblGenres.text = self.presenter.genres
         self.lblRelease.text = self.presenter.formattedDate
+        
+        self.lblOverviewWord.text = NSLocalizedString("movie_details_overview", comment: "Overview: ")
         self.lblOverview.text = self.presenter.movieOverview
     }
     

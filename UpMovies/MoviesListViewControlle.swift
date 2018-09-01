@@ -108,6 +108,7 @@ extension MoviesListViewController: UITableViewDataSource {
             movieCell.ivBackground.kf.setImage(with: movieInfo.bgUrl)
             movieCell.ivThumb.kf.setImage(with: movieInfo.thumbUrl)
             movieCell.lblTitle.text = movieInfo.title
+            movieCell.lblGenres.text = movieInfo.genres
             movieCell.lblDetails.text = movieInfo.details
         }
         

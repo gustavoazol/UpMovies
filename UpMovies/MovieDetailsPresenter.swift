@@ -82,14 +82,13 @@ class MovieDetailsPresenter: NSObject {
         }
         
         dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMdd")
+        dateFormatter.setLocalizedDateFormatFromTemplate("YYYMMMMdd")
         return dateFormatter.string(from: date)
     }
     
     var movieOverview: String {
         if let overview = self.movie?.overview, !overview.isEmpty {
-            let overview_intro = NSLocalizedString("movie_details_overview", comment: "Overview: ")
-            return (overview_intro + "\n" + overview)
+            return overview
         }
         else {
             return NSLocalizedString("movie_details_overview_not_available", comment: "Overview not available")

@@ -12,6 +12,7 @@ class MoviesListCell: UITableViewCell {
     @IBOutlet weak var ivBackground: UIImageView!
     @IBOutlet weak var ivThumb: UIImageView!
     @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblGenres: UILabel!
     @IBOutlet weak var lblDetails: UILabel!
     
     @IBOutlet weak var bgTopConstraint: NSLayoutConstraint!

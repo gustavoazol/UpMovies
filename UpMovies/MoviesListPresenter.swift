@@ -103,7 +103,7 @@ extension MoviesListPresenter {
         return self.moviesList.count
     }
     
-    func getMovieInfo(atIndex indexPath: IndexPath) -> (bgUrl: URL?, thumbUrl: URL?, title: String, details: String)? {
+    func getMovieInfo(atIndex indexPath: IndexPath) -> (bgUrl: URL?, thumbUrl: URL?, title: String, genres: String, details: String)? {
         guard indexPath.row < self.moviesCount else {
             return nil
         }
@@ -111,8 +111,9 @@ extension MoviesListPresenter {
         let movie = self.moviesList[indexPath.row]
         let thumbUrl: URL? = self.thumbUrl(forMovie: movie)
         let bgUrl: URL? = self.bgUrl(forMovie: movie) ?? thumbUrl
+        let genres = self.genres(forMovie: movie)
         let description = self.formattedDate(fromMovie: movie)
-        return (bgUrl, thumbUrl, movie.title, description)
+        return (bgUrl, thumbUrl, movie.title, genres, description)
     }
     
     private func bgUrl(forMovie movie: Movie) -> URL? {
@@ -155,5 +156,16 @@ extension MoviesListPresenter {
         dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
         dateFormatter.setLocalizedDateFormatFromTemplate("YYYMMMMdd")
         return dateFormatter.string(from: date)
+    }
+    
+    private func genres(forMovie movie: Movie) -> String {
+        var genres = ""
+        for genreId in movie.genreIds {
+            if let genreName = Configuration.current?.genres[genreId] {
+                genres.append("\(genreName)   ")
+            }
+        }
+        
+        return genres.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
 }
