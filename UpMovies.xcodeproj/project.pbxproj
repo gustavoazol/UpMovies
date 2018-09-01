@@ -11,6 +11,7 @@
 		ECF5444D213770CB000BCCE0 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5444C213770CB000BCCE0 /* LoadingViewController.swift */; };
 		ECF5445721379BFE000BCCE0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ECF5445921379BFE000BCCE0 /* Localizable.strings */; };
 		ECF5445D2138E1D6000BCCE0 /* MoviesListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5445C2138E1D6000BCCE0 /* MoviesListInteractor.swift */; };
+		ECF54460213B328E000BCCE0 /* CustomTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5445F213B328E000BCCE0 /* CustomTransitionAnimation.swift */; };
 		ECFCAC0821376E6200CEAAFC /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFCAC0721376E6200CEAAFC /* MovieDetailsViewController.swift */; };
 		ECFD9B5E2134F01F004F0901 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */; };
 		ECFD9B632134F01F004F0901 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECFD9B612134F01F004F0901 /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 		ECF5445A21379C03000BCCE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		ECF5445B21379C43000BCCE0 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		ECF5445C2138E1D6000BCCE0 /* MoviesListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesListInteractor.swift; sourceTree = "<group>"; };
+		ECF5445F213B328E000BCCE0 /* CustomTransitionAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransitionAnimation.swift; sourceTree = "<group>"; };
 		ECFCAC0721376E6200CEAAFC /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
 		ECFD9B5A2134F01F004F0901 /* UpMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,17 +80,18 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		ECF5444B213770B5000BCCE0 /* LoadingScreen */ = {
+		ECF5445E213B325C000BCCE0 /* InitialScreens */ = {
 			isa = PBXGroup;
 			children = (
 				ECF5444C213770CB000BCCE0 /* LoadingViewController.swift */,
 			);
-			path = LoadingScreen;
+			name = InitialScreens;
 			sourceTree = "<group>";
 		};
 		ECFCAC0921376E6D00CEAAFC /* MoviesList */ = {
 			isa = PBXGroup;
 			children = (
+				ECF5445F213B328E000BCCE0 /* CustomTransitionAnimation.swift */,
 				ECFD9B7821363C6B004F0901 /* MoviesListCell.swift */,
 				ECFD9B7621363BEB004F0901 /* MoviesListViewControlle.swift */,
 				ECFD9B7A21363E99004F0901 /* MoviesListPresenter.swift */,
@@ -127,9 +130,9 @@
 		ECFD9B5C2134F01F004F0901 /* UpMovies */ = {
 			isa = PBXGroup;
 			children = (
+				ECF5445E213B325C000BCCE0 /* InitialScreens */,
 				ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */,
 				ECFD9B612134F01F004F0901 /* Main.storyboard */,
-				ECF5444B213770B5000BCCE0 /* LoadingScreen */,
 				ECFCAC0A21376E8D00CEAAFC /* MovieDetail */,
 				ECFCAC0921376E6D00CEAAFC /* MoviesList */,
 				ECFD9B6F2134F076004F0901 /* MoviesDbRestAPI.swift */,
@@ -269,6 +272,7 @@
 				ECFD9B702134F076004F0901 /* MoviesDbRestAPI.swift in Sources */,
 				ECF5445D2138E1D6000BCCE0 /* MoviesListInteractor.swift in Sources */,
 				ECFD9B7321363ABE004F0901 /* Configuration.swift in Sources */,
+				ECF54460213B328E000BCCE0 /* CustomTransitionAnimation.swift in Sources */,
 				ECFD9B5E2134F01F004F0901 /* AppDelegate.swift in Sources */,
 				ECFD9B7B21363E99004F0901 /* MoviesListPresenter.swift in Sources */,
 				ECFD9B7721363BEB004F0901 /* MoviesListViewControlle.swift in Sources */,

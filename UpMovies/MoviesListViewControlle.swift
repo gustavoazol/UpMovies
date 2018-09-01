@@ -24,6 +24,7 @@ class MoviesListViewController: UIViewController {
         self.addKeyboardObservers()
         self.adjustDefaultScreenInfo()
         
+        self.navigationController?.delegate = self
         self.presenter.delegate = self
         self.presenter.loadMoviesList()
     }
@@ -182,6 +183,35 @@ extension MoviesListViewController: MoviesListPresenterDelegate {
     func moviesListUpdated() {
         self.svContentMessage.isHidden = true
         self.tableView.reloadData()
+    }
+}
+
+//MARK: - Nav Controller Transition
+extension MoviesListViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let cellInfo = self.selectedCellData() else {
+            return nil
+        }
+        
+        let duration: TimeInterval = 0.5
+        let presenting = operation == .push
+
+        return CustomTransitionAnimation(duration: duration, isPresenting: presenting, referenceFrame: cellInfo.frame, image: cellInfo.bgImage)
+    }
+    
+    private func selectedCellData() -> (frame: CGRect, bgImage: UIImage?)? {
+        guard let selectedIndex = self.tableView.indexPathForSelectedRow else {
+            return nil
+        }
+        
+        var bgImage:UIImage?
+        if let cell = self.tableView.cellForRow(at: selectedIndex) as? MoviesListCell {
+            bgImage = cell.ivBackground.image
+        }
+        
+        let cellRect = tableView.rectForRow(at: selectedIndex)
+        let convertedrect = self.view.convert(cellRect, from: self.tableView)
+        return (convertedrect, bgImage)
     }
 }
 
