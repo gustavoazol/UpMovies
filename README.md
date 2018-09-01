@@ -7,5 +7,6 @@ You must have [cocoapods](https://cocoapods.org) installed. Then, open the works
 
 
 
-##### Pods Used:
-- [Kingfisher](https://github.com/onevcat/Kingfisher) - A easy and simple way to download and load images. Used to load the images through the app.
+##### Third Parts Used:
+- [The Movie DB API](https://www.themoviedb.org/documentation/api): From where the app is feeded with all movies and movies information.
+- [Kingfisher](https://github.com/onevcat/Kingfisher): A easy and simple way to download and load images. Used to load the images through the app.
