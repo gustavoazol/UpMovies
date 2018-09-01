@@ -11,7 +11,6 @@ import Foundation
 protocol MoviesListPresenterDelegate: class {
     func moviesListUpdated()
     func showLoadingMovies(loading: Bool, full: Bool)
-    func newMoviesLoaded(atIndexes indexes: [IndexPath])
     func showErrorLoadingMovies()
 }
 
@@ -30,14 +29,13 @@ class MoviesListPresenter: NSObject {
         
         self.interactor.fetchMovies { [weak self] (success, movies) in
             self?.delegate?.showLoadingMovies(loading: false, full: true)
-            guard success else {
-                self?.delegate?.showErrorLoadingMovies()
-                return
-            }
-            
             self?.isLoadingMovies = false
+            
             self?.moviesList = movies
             self?.delegate?.moviesListUpdated()
+            if !success {
+                self?.delegate?.showErrorLoadingMovies()
+            }
         }
     }
     
@@ -55,25 +53,15 @@ class MoviesListPresenter: NSObject {
         
         self.interactor.loadMoreMovies { [weak self] (success, movies) in
             self?.delegate?.showLoadingMovies(loading: false, full: false)
+            self?.isLoadingMovies = false
+
             guard success else {
                 print("Error loading more movies")
                 return
             }
             
-            self?.isLoadingMovies = false
             self?.moviesList.append(contentsOf: movies)
             self?.delegate?.moviesListUpdated()
-            
-            /*
-             var newIndexes = [IndexPath]()
-             for i in 0..<newMovies.count {
-             let row = (self?.moviesList.count ?? 0) + i
-             let indexPath = IndexPath(row: row, section: 0)
-             newIndexes.append(indexPath)
-             }
-             
-             self?.delegate?.newMoviesLoaded(atIndexes: newIndexes)
-             */
         }
     }
     
@@ -165,7 +153,7 @@ extension MoviesListPresenter {
         }
         
         dateFormatter.locale = Locale(identifier: Locale.preferredLanguages.first!)
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMdd")
+        dateFormatter.setLocalizedDateFormatFromTemplate("YYYMMMMdd")
         return dateFormatter.string(from: date)
     }
 }

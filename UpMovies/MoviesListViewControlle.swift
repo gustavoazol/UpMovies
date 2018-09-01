@@ -165,28 +165,22 @@ extension MoviesListViewController: UITableViewDelegate {
 // MARK: - Presenter Delegate
 extension MoviesListViewController: MoviesListPresenterDelegate {
     func showLoadingMovies(loading: Bool, full: Bool) {
-        self.tableView.tableHeaderView = (loading && full) ? vTableLoading : nil
-        self.tableView.tableFooterView = (loading && !full) ? vTableLoading : nil
-        
-        self.tableView.isHidden = false
-        self.svContentMessage.isHidden = true
+        if full {
+            self.tableView.tableHeaderView = loading ? self.vTableLoading : nil
+        }
+        else {
+            self.tableView.tableFooterView = loading ? self.vTableLoading : nil
+        }
     }
     
     func showErrorLoadingMovies() {
         self.lblContentMessage.text = NSLocalizedString("movies_list_fetch_problem", comment: "We had a problem while fetching your movies")
-        self.btnTryAgain.isHidden = false
-        
+        self.btnTryAgain.isHidden = false        
         self.svContentMessage.isHidden = false
-        self.tableView.isHidden = true
-    }
-    
-    func newMoviesLoaded(atIndexes indexes: [IndexPath]) {
-        self.tableView.isHidden = false
-        self.svContentMessage.isHidden = true
-        self.tableView.insertRows(at: indexes, with: UITableViewRowAnimation.none)
     }
     
     func moviesListUpdated() {
+        self.svContentMessage.isHidden = true
         self.tableView.reloadData()
     }
 }
