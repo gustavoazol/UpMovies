@@ -6,6 +6,7 @@
   Copyright © 2018 Gustavo Azevedo de Oliveira. All rights reserved.
 */
 
-
 "movie_details_overview" = "Sinopse:";
 "movie_details_overview_not_available" = "Sinopse não disponível";
+
+"movies_list_empty" = "Nenhum filme encontrado";

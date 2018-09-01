@@ -119,7 +119,7 @@ class MoviesDbRestAPI: NSObject {
 
 // MARK: - Movies Fetch
 extension MoviesDbRestAPI {
-    class func getUpcomingMovies(page: Int? = nil, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
+    class func getUpcomingMovies(page: Int? = nil, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie]?)->Void) {
         let path = "/movie/upcoming"
         let method = "GET"
         
@@ -131,7 +131,7 @@ extension MoviesDbRestAPI {
         self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
-                completion(0, 0, [])
+                completion(0, 0, nil)
             }
             else if let returnedData = data {
                 do {
@@ -140,16 +140,16 @@ extension MoviesDbRestAPI {
                 }
                 catch {
                     print(error.localizedDescription)
-                    completion(0, 0, [])
+                    completion(0, 0, nil)
                 }
             }
             else {
-                completion(0, 0, [])
+                completion(0, 0, nil)
             }
         }
     }
     
-    class func searchMovies(page: Int? = nil, query: String, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie])->Void) {
+    class func searchMovies(page: Int? = nil, query: String, completion: @escaping (_ newPage: Int, _ maxPages: Int, _ results: [Movie]?)->Void) {
         let path = "/search/movie"
         let method = "GET"
         
@@ -162,7 +162,7 @@ extension MoviesDbRestAPI {
         self.executeRequest(path: path, queryItems: queryItems, httpMethod: method) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
-                completion(0, 0, [])
+                completion(0, 0, nil)
             }
             else if let returnedData = data {
                 do {
@@ -171,22 +171,22 @@ extension MoviesDbRestAPI {
                 }
                 catch {
                     print(error.localizedDescription)
-                    completion(0, 0, [])
+                    completion(0, 0, nil)
                 }
             }
             else {
-                completion(0, 0, [])
+                completion(0, 0, nil)
             }
         }
     }
     
-    private class func decodeMoviesResult(resultData: Data) throws -> (page: Int, maxPage: Int, movies: [Movie]) {
+    private class func decodeMoviesResult(resultData: Data) throws -> (page: Int, maxPage: Int, movies: [Movie]?) {
         guard let jsonDic = try JSONSerialization.jsonObject(with: resultData, options: .mutableContainers) as? Dictionary<String, Any> else {
-            return (0, 0, [])
+            return (0, 0, nil)
         }
         
         guard let newPage = jsonDic["page"] as? Int, let maxPages = jsonDic["total_pages"] as? Int, let moviesJson = jsonDic["results"] else {
-            return (0, 0, [])
+            return (0, 0, nil)
         }
         
         let moviesData = try JSONSerialization.data(withJSONObject: moviesJson, options: JSONSerialization.WritingOptions.prettyPrinted)

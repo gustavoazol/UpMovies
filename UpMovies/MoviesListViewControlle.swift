@@ -13,6 +13,10 @@ class MoviesListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var vTableLoading: UIView!
     
+    @IBOutlet weak var svContentMessage: UIStackView!
+    @IBOutlet weak var lblContentMessage: UILabel!
+    @IBOutlet weak var btnTryAgain: UIButton!
+    
     let presenter = MoviesListPresenter()
     
     override func viewDidLoad() {
@@ -31,6 +35,13 @@ class MoviesListViewController: UIViewController {
             let selectedIndex = self.tableView.indexPathForSelectedRow {
             vc.presenter.movie = self.presenter.getMovie(forCell: selectedIndex)
         }
+    }
+    
+    
+    private func showEmptyResultsMessage(show: Bool) {
+        self.lblContentMessage.text = NSLocalizedString("movies_list_empty", comment: "No movies found")
+        self.btnTryAgain.isHidden = true
+        self.svContentMessage.isHidden = !show
     }
 }
 
@@ -66,7 +77,9 @@ extension MoviesListViewController: UISearchBarDelegate {
 // MARK: - TableView Datasource
 extension MoviesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.presenter.moviesCount
+        let moviesCount = self.presenter.moviesCount
+        self.showEmptyResultsMessage(show: moviesCount == 0)
+        return moviesCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

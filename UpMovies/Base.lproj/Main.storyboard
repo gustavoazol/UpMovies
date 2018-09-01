@@ -26,9 +26,29 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="wgP-qD-fqC"/>
                                 </connections>
                             </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" rowHeight="160" estimatedRowHeight="-1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="1" sectionFooterHeight="1" estimatedSectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="d2T-RD-f1C">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="uLu-zI-Wv5">
+                                <rect key="frame" x="30" y="166" width="315" height="21.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No movies found" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I42-Mm-rcq">
+                                        <rect key="frame" x="90" y="0.0" width="135" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="18"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button hidden="YES" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vuK-Ey-jTA">
+                                        <rect key="frame" x="94.5" y="-166" width="126" height="0.0"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                        <inset key="contentEdgeInsets" minX="30" minY="10" maxX="30" maxY="10"/>
+                                        <state key="normal" title="Try again">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" rowHeight="160" estimatedRowHeight="-1" sectionHeaderHeight="1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="d2T-RD-f1C">
                                 <rect key="frame" x="0.0" y="86" width="375" height="581"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" white="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MovieCell" rowHeight="160" id="yVO-gS-uIh" customClass="MoviesListCell" customModule="UpMovies" customModuleProvider="target">
@@ -102,11 +122,14 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="uLu-zI-Wv5" secondAttribute="trailing" constant="30" id="7jS-1L-kYw"/>
                             <constraint firstItem="J5t-Zj-vGz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="A08-LJ-8Zu"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="d2T-RD-f1C" secondAttribute="bottom" id="Exr-1o-zGN"/>
                             <constraint firstItem="d2T-RD-f1C" firstAttribute="top" secondItem="J5t-Zj-vGz" secondAttribute="bottom" id="HGI-CT-Otb"/>
                             <constraint firstItem="J5t-Zj-vGz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="amy-Rm-l07"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="d2T-RD-f1C" secondAttribute="trailing" id="izF-Lu-skW"/>
+                            <constraint firstItem="uLu-zI-Wv5" firstAttribute="top" secondItem="J5t-Zj-vGz" secondAttribute="bottom" constant="80" id="nBy-wq-8io"/>
+                            <constraint firstItem="uLu-zI-Wv5" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="sm1-hx-LrM"/>
                             <constraint firstItem="d2T-RD-f1C" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="wab-Sr-MZu"/>
                             <constraint firstItem="J5t-Zj-vGz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="xyS-IQ-fMe"/>
                         </constraints>
@@ -114,6 +137,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="qak-sc-8lI"/>
                     <connections>
+                        <outlet property="btnTryAgain" destination="vuK-Ey-jTA" id="Xcb-bc-Apg"/>
+                        <outlet property="lblContentMessage" destination="I42-Mm-rcq" id="y7O-dN-G0i"/>
+                        <outlet property="svContentMessage" destination="uLu-zI-Wv5" id="1rV-qB-fG7"/>
                         <outlet property="tableView" destination="d2T-RD-f1C" id="MFx-ys-P6y"/>
                         <outlet property="vTableLoading" destination="Fla-fe-Jbs" id="Ugc-sO-wxh"/>
                     </connections>
@@ -320,7 +346,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="aKT-3c-Dgg"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="MoviesListSegue" id="JVa-cv-Ltx"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="MoviesListSegue" animates="NO" id="JVa-cv-Ltx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nAj-At-rEX" userLabel="First Responder" sceneMemberID="firstResponder"/>

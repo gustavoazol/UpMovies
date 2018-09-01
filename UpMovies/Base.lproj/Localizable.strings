@@ -8,3 +8,5 @@
 
 "movie_details_overview" = "Overview:";
 "movie_details_overview_not_available" = "Overview not available";
+
+"movies_list_empty" = "No movies found";

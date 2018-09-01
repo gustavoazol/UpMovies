@@ -26,12 +26,12 @@ class MoviesListInteractor: NSObject {
         return page < maxPage
     }
     
-    func fetchMovies(completion: @escaping (_ movies: [Movie])->Void) {
+    func fetchMovies(completion: @escaping (_ success: Bool, _ movies: [Movie])->Void) {
         self.clearPages()
         self.loadMoreMovies(completion: completion)
     }
     
-    func loadMoreMovies(completion: @escaping (_ movies: [Movie])->Void) {
+    func loadMoreMovies(completion: @escaping (_ success: Bool, _ movies: [Movie])->Void) {
         if self.searchTerm.isEmpty {
             self.fetchUpcomingMovies(completion: completion)
         }
@@ -40,34 +40,44 @@ class MoviesListInteractor: NSObject {
         }
     }
     
-    private func fetchUpcomingMovies(completion: @escaping (_ movies: [Movie])->Void) {
+    private func fetchUpcomingMovies(completion: @escaping (_ success: Bool, _ movies: [Movie])->Void) {
         guard hasMoreMoviesToFetch else {
-            completion([])
+            completion(true, [])
             return
         }
         
         let pageToFetch = self.getPageToFetch()
         MoviesDbRestAPI.getUpcomingMovies(page: pageToFetch) { [weak self] (page, maxPage, movies) in
             DispatchQueue.main.async {
-                self?.page = page
-                self?.maxPage = maxPage
-                completion(movies)
+                if let newMovies = movies {
+                    self?.page = page
+                    self?.maxPage = maxPage
+                    completion(true, newMovies)
+                }
+                else {
+                    completion(false, [])
+                }
             }
         }
     }
     
-    private func searchMovies(withTerm term: String, completion: @escaping (_ movies: [Movie])->Void) {
+    private func searchMovies(withTerm term: String, completion: @escaping (_ success: Bool, _ movies: [Movie])->Void) {
         guard hasMoreMoviesToFetch else {
-            completion([])
+            completion(true, [])
             return
         }
         
         let pageToFetch = self.getPageToFetch()
         MoviesDbRestAPI.searchMovies(page: pageToFetch, query: term) { [weak self] (page, maxPage, movies) in
             DispatchQueue.main.async {
-                self?.page = page
-                self?.maxPage = maxPage
-                completion(movies)
+                if let newMovies = movies {
+                    self?.page = page
+                    self?.maxPage = maxPage
+                    completion(true, newMovies)
+                }
+                else {
+                    completion(false, [])
+                }
             }
         }
     }

@@ -30,7 +30,12 @@ class MoviesListPresenter: NSObject {
     
     private func fetchMovies() {
         self.isLoadingMovies = true
-        self.interactor.fetchMovies { [weak self] (movies) in
+        self.interactor.fetchMovies { [weak self] (success, movies) in
+            guard success else {
+                // show error
+                return
+            }
+            
             self?.isLoadingMovies = false
             self?.moviesList = movies
             self?.delegate?.moviesListUpdated()
@@ -49,7 +54,12 @@ class MoviesListPresenter: NSObject {
         self.isLoadingMovies = true
         self.delegate?.showLoadingMoreMovies(loading: true)
         
-        self.interactor.loadMoreMovies { [weak self] (movies) in
+        self.interactor.loadMoreMovies { [weak self] (success, movies) in
+            guard success else {
+                // show error
+                return
+            }
+            
             self?.isLoadingMovies = false
             self?.delegate?.showLoadingMoreMovies(loading: false)
             
