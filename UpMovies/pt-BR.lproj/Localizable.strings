@@ -10,3 +10,5 @@
 "movie_details_overview_not_available" = "Sinopse não disponível";
 
 "movies_list_empty" = "Nenhum filme encontrado";
+"movies_list_fetch_problem" = "Tivemos um problema carregar sua lista de filmes";
+"movies_list_try_again" = "Tentar Novamente";

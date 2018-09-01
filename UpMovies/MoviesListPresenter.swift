@@ -10,8 +10,9 @@ import Foundation
 
 protocol MoviesListPresenterDelegate: class {
     func moviesListUpdated()
-    func showLoadingMoreMovies(loading: Bool)
+    func showLoadingMovies(loading: Bool, full: Bool)
     func newMoviesLoaded(atIndexes indexes: [IndexPath])
+    func showErrorLoadingMovies()
 }
 
 class MoviesListPresenter: NSObject {
@@ -23,16 +24,14 @@ class MoviesListPresenter: NSObject {
     let interactor = MoviesListInteractor()
     weak var delegate: MoviesListPresenterDelegate?
     
-    override init() {
-        super.init()
-        self.fetchMovies()
-    }
-    
-    private func fetchMovies() {
+    func loadMoviesList() {
         self.isLoadingMovies = true
+        self.delegate?.showLoadingMovies(loading: true, full: true)
+        
         self.interactor.fetchMovies { [weak self] (success, movies) in
+            self?.delegate?.showLoadingMovies(loading: false, full: true)
             guard success else {
-                // show error
+                self?.delegate?.showErrorLoadingMovies()
                 return
             }
             
@@ -52,17 +51,16 @@ class MoviesListPresenter: NSObject {
         }
         
         self.isLoadingMovies = true
-        self.delegate?.showLoadingMoreMovies(loading: true)
+        self.delegate?.showLoadingMovies(loading: true, full: false)
         
         self.interactor.loadMoreMovies { [weak self] (success, movies) in
+            self?.delegate?.showLoadingMovies(loading: false, full: false)
             guard success else {
-                // show error
+                print("Error loading more movies")
                 return
             }
             
             self?.isLoadingMovies = false
-            self?.delegate?.showLoadingMoreMovies(loading: false)
-            
             self?.moviesList.append(contentsOf: movies)
             self?.delegate?.moviesListUpdated()
             
@@ -107,7 +105,7 @@ extension MoviesListPresenter {
         }
         
         self.interactor.searchTerm = searchTerm
-        self.fetchMovies()
+        self.loadMoviesList()
     }
 }
 

@@ -10,3 +10,5 @@
 "movie_details_overview_not_available" = "Overview not available";
 
 "movies_list_empty" = "No movies found";
+"movies_list_fetch_problem" = "We had a problem while fetching your movies";
+"movies_list_try_again" = "Try Again";

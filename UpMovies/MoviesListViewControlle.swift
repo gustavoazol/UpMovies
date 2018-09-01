@@ -21,13 +21,21 @@ class MoviesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.presenter.delegate = self
         self.addKeyboardObservers()
+        self.adjustDefaultScreenInfo()
+        
+        self.presenter.delegate = self
+        self.presenter.loadMoviesList()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.btnTryAgain.layer.cornerRadius = self.btnTryAgain.bounds.height/2
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,11 +45,20 @@ class MoviesListViewController: UIViewController {
         }
     }
     
+    private func adjustDefaultScreenInfo() {
+        let btnTitle = NSLocalizedString("movies_list_try_again", comment: "Try Again")
+        self.btnTryAgain.setTitle(btnTitle, for: .normal)
+        self.btnTryAgain.layoutIfNeeded()
+    }
     
     private func showEmptyResultsMessage(show: Bool) {
         self.lblContentMessage.text = NSLocalizedString("movies_list_empty", comment: "No movies found")
         self.btnTryAgain.isHidden = true
         self.svContentMessage.isHidden = !show
+    }
+    
+    @IBAction func retryMoviesLoadPressed(_ sender: UIButton) {
+        self.presenter.loadMoviesList()
     }
 }
 
@@ -147,14 +164,26 @@ extension MoviesListViewController: UITableViewDelegate {
 
 // MARK: - Presenter Delegate
 extension MoviesListViewController: MoviesListPresenterDelegate {
-    func newMoviesLoaded(atIndexes indexes: [IndexPath]) {
-        self.tableView.beginUpdates()
-        self.tableView.insertRows(at: indexes, with: UITableViewRowAnimation.none)
-        self.tableView.endUpdates()
+    func showLoadingMovies(loading: Bool, full: Bool) {
+        self.tableView.tableHeaderView = (loading && full) ? vTableLoading : nil
+        self.tableView.tableFooterView = (loading && !full) ? vTableLoading : nil
+        
+        self.tableView.isHidden = false
+        self.svContentMessage.isHidden = true
     }
     
-    func showLoadingMoreMovies(loading: Bool) {
-        self.tableView.tableFooterView = loading ? vTableLoading : nil
+    func showErrorLoadingMovies() {
+        self.lblContentMessage.text = NSLocalizedString("movies_list_fetch_problem", comment: "We had a problem while fetching your movies")
+        self.btnTryAgain.isHidden = false
+        
+        self.svContentMessage.isHidden = false
+        self.tableView.isHidden = true
+    }
+    
+    func newMoviesLoaded(atIndexes indexes: [IndexPath]) {
+        self.tableView.isHidden = false
+        self.svContentMessage.isHidden = true
+        self.tableView.insertRows(at: indexes, with: UITableViewRowAnimation.none)
     }
     
     func moviesListUpdated() {

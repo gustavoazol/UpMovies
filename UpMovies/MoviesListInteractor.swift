@@ -47,7 +47,13 @@ class MoviesListInteractor: NSObject {
         }
         
         let pageToFetch = self.getPageToFetch()
+        
         MoviesDbRestAPI.getUpcomingMovies(page: pageToFetch) { [weak self] (page, maxPage, movies) in
+            // In case a search is dispatch, and old fetch result come out of order
+            guard self?.searchTerm.isEmpty == true else {
+                return
+            }
+            
             DispatchQueue.main.async {
                 if let newMovies = movies {
                     self?.page = page
@@ -68,7 +74,14 @@ class MoviesListInteractor: NSObject {
         }
         
         let pageToFetch = self.getPageToFetch()
+        let searchText = self.searchTerm
+        
         MoviesDbRestAPI.searchMovies(page: pageToFetch, query: term) { [weak self] (page, maxPage, movies) in
+            // In case another search is dispatch, and old search result come out of order
+            guard searchText == self?.searchTerm else {
+                return
+            }
+            
             DispatchQueue.main.async {
                 if let newMovies = movies {
                     self?.page = page
