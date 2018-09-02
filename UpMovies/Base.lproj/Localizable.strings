@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  UpMovies
+
+  Created by Gustavo Azevedo de Oliveira on 30/08/2018.
+  Copyright © 2018 Gustavo Azevedo de Oliveira. All rights reserved.
+*/
+
+"initial_loading_error" = "Information could not be loaded. Please, try again.";
+
+"movie_details_overview" = "Overview:";
+"movie_details_overview_not_available" = "Overview not available";
+
+"movies_list_empty" = "No movies found";
+"movies_list_fetch_problem" = "Could not load your movies list. Please, verify you internet connection and try again.";
+"movies_list_try_again" = "Try Again";
+"movies_list_search" = "Search for movies...";
