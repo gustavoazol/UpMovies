@@ -6,9 +6,12 @@
   Copyright © 2018 Gustavo Azevedo de Oliveira. All rights reserved.
 */
 
+"initial_loading_error" = "As informações não puderam ser carregadas. Por favor, tente novamente.";
+
 "movie_details_overview" = "Sinopse:";
 "movie_details_overview_not_available" = "Sinopse não disponível";
 
 "movies_list_empty" = "Nenhum filme encontrado";
-"movies_list_fetch_problem" = "Tivemos um problema carregar sua lista de filmes";
+"movies_list_fetch_problem" = "Não foi possível carregar sua lista de filmes. Verifique sua internet e tente novamente.";
 "movies_list_try_again" = "Tentar Novamente";
+"movies_list_search" = "Pesquisar filmes...";

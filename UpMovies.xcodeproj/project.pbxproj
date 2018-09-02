@@ -130,12 +130,12 @@
 		ECFD9B5C2134F01F004F0901 /* UpMovies */ = {
 			isa = PBXGroup;
 			children = (
-				ECF5445E213B325C000BCCE0 /* InitialScreens */,
 				ECFD9B5D2134F01F004F0901 /* AppDelegate.swift */,
 				ECFD9B612134F01F004F0901 /* Main.storyboard */,
+				ECFD9B6F2134F076004F0901 /* MoviesDbRestAPI.swift */,
+				ECF5445E213B325C000BCCE0 /* InitialScreens */,
 				ECFCAC0A21376E8D00CEAAFC /* MovieDetail */,
 				ECFCAC0921376E6D00CEAAFC /* MoviesList */,
-				ECFD9B6F2134F076004F0901 /* MoviesDbRestAPI.swift */,
 				ECFD9B7121363A9B004F0901 /* Entities */,
 				ECFD9B642134F021004F0901 /* Assets.xcassets */,
 				ECFD9B662134F021004F0901 /* LaunchScreen.storyboard */,

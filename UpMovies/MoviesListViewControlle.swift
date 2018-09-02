@@ -10,6 +10,7 @@ import UIKit
 import Kingfisher
 
 class MoviesListViewController: UIViewController {
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var vTableLoading: UIView!
     
@@ -47,9 +48,9 @@ class MoviesListViewController: UIViewController {
     }
     
     private func adjustDefaultScreenInfo() {
+        self.searchBar.placeholder = NSLocalizedString("movies_list_search", comment: "Search for movies...")
         let btnTitle = NSLocalizedString("movies_list_try_again", comment: "Try Again")
         self.btnTryAgain.setTitle(btnTitle, for: .normal)
-        self.btnTryAgain.layoutIfNeeded()
     }
     
     private func showEmptyResultsMessage(show: Bool) {

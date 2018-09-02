@@ -46,24 +46,24 @@ class MoviesDbRestAPI: NSObject {
         }
     }
     
-    class func getGenresWithIds(completion: @escaping (_ genresDic: Dictionary<Int, String>)->Void) {
+    class func getGenresWithIds(completion: @escaping (_ genresDic: Dictionary<Int, String>?)->Void) {
         let path = "/genre/movie/list"
         let method = "GET"
         
         self.executeRequest(path: path, httpMethod: method) { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
-                completion([:])
+                completion(nil)
             }
             else if let returnedData = data {
                 do {
                     guard let jsonDic = try JSONSerialization.jsonObject(with: returnedData, options: .mutableContainers) as? Dictionary<String, Any> else {
-                        completion([:])
+                        completion(nil)
                         return
                     }
                     
                     guard let genresJson = jsonDic["genres"] as? [Dictionary<String, Any>] else {
-                        completion([:])
+                        completion(nil)
                         return
                     }
                     
@@ -78,7 +78,7 @@ class MoviesDbRestAPI: NSObject {
                 }
                 catch {
                     print(error.localizedDescription)
-                    completion([:])
+                    completion(nil)
                 }
             }
         }
